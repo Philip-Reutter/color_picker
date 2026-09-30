@@ -1,6 +1,7 @@
 name: color_picker
 channels:
   - defaults
+  - conda-forge
 dependencies:
   - python=3.12
   - pillow

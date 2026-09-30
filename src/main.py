@@ -1,9 +1,3 @@
-"""
-RGB Color Picker
-Hover your mouse over the image to see RGB values in real time.
-Click to copy/save a color. Press 'q' or Escape to quit.
-"""
-
 import sys
 import tkinter as tk
 from tkinter import filedialog, messagebox
@@ -15,10 +9,8 @@ class RGBPicker:
         self.root = root
         self.root.title("RGB Color Picker")
         self.root.configure(bg="#1a1a1a")
-
         self.saved_colors = []
 
-        # ── Top bar ──────────────────────────────────────────────────────────
         top = tk.Frame(root, bg="#1a1a1a")
         top.pack(fill="x", padx=10, pady=(10, 0))
 
@@ -40,12 +32,10 @@ class RGBPicker:
         )
         self.status.pack(side="right")
 
-        # ── Canvas ───────────────────────────────────────────────────────────
         self.canvas = tk.Canvas(root, bg="#111", cursor="crosshair",
                                 highlightthickness=0)
         self.canvas.pack(fill="both", expand=True, padx=10, pady=10)
 
-        # ── Info panel ───────────────────────────────────────────────────────
         info = tk.Frame(root, bg="#222", pady=10)
         info.pack(fill="x", padx=10, pady=(0, 10))
 
@@ -77,23 +67,19 @@ class RGBPicker:
         )
         self.click_hint.pack(side="right", padx=4)
 
-        # ── State ────────────────────────────────────────────────────────────
         self.pil_image = None
         self.tk_image = None
-        self.img_offset = (0, 0)   # canvas offset of the image
+        self.img_offset = (0, 0)
 
-        # ── Bindings ─────────────────────────────────────────────────────────
+        # Bindings
         self.canvas.bind("<Motion>", self.on_mouse_move)
         self.canvas.bind("<Button-1>", self.on_click)
         self.canvas.bind("<Configure>", self.on_resize)
         root.bind("<q>", lambda e: root.destroy())
         root.bind("<Escape>", lambda e: root.destroy())
 
-        # ── Load image if provided ────────────────────────────────────────────
         if image_path:
             self.load_image(image_path)
-
-    # ── File handling ─────────────────────────────────────────────────────────
 
     def open_image(self):
         path = filedialog.askopenfilename(
@@ -111,8 +97,6 @@ class RGBPicker:
             self.render_image()
         except Exception as e:
             messagebox.showerror("Error", f"Could not open image:\n{e}")
-
-    # ── Rendering ─────────────────────────────────────────────────────────────
 
     def render_image(self):
         if self.pil_image is None:
@@ -132,8 +116,6 @@ class RGBPicker:
 
     def on_resize(self, event):
         self.render_image()
-
-    # ── Pixel sampling ────────────────────────────────────────────────────────
 
     def canvas_to_image(self, cx, cy):
         """Convert canvas coords → original image pixel coords."""
@@ -175,11 +157,8 @@ class RGBPicker:
         entry = f"RGB({r:3d},{g:3d},{b:3d})  HEX {hex_color}  @ ({px},{py})"
         self.saved_colors.append(entry)
         self.status.config(text=f"Saved: {hex_color}  ({len(self.saved_colors)} total)")
-        # Flash border on canvas to confirm
         self.canvas.config(highlightthickness=2, highlightbackground=hex_color)
         self.root.after(300, lambda: self.canvas.config(highlightthickness=0))
-
-    # ── Export ────────────────────────────────────────────────────────────────
 
     def save_colors(self):
         if not self.saved_colors:
@@ -194,9 +173,6 @@ class RGBPicker:
             with open(path, "w") as f:
                 f.write("\n".join(self.saved_colors) + "\n")
             messagebox.showinfo("Saved", f"{len(self.saved_colors)} colors saved to:\n{path}")
-
-
-# ── Entry point ───────────────────────────────────────────────────────────────
 
 def main():
     image_path = sys.argv[1] if len(sys.argv) > 1 else None

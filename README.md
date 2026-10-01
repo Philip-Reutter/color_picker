@@ -21,5 +21,6 @@ A simple Python tool to inspect pixel colors from images and save selected value
 ```bash
 conda env create -f environment.yml
 conda activate color_picker
+
 python src/main.py
 ```
